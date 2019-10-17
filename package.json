@@ -1,0 +1,29 @@
+{
+  "name": "wallet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomasa321/wallet.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tomasa321/wallet/issues"
+  },
+  "homepage": "https://github.com/tomasa321/wallet#readme",
+  "dependencies": {
+    "bitcoin-core": "^3.0.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-promise": "^4.2.1"
+  }
+}
