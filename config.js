@@ -1,5 +1,5 @@
 const config = {
-  port: 3010,
+  port: 3000,
   wallet: {
     host: 'localhost',
     port: 8332,

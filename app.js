@@ -1,7 +1,7 @@
 const express = require('express');
 
 const app = express();
-const bodyParser = require("body-parser");
+const bodyParser = require('body-parser');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -37,14 +37,12 @@ app.get('/', async (req, res) => {
 
 app.get('/tx', (req, res) => {
   const txId = req.query.txid;
-  let txData = {};
-  client.getTransaction(txId).then((receivedTxData) => {
-    txData = receivedTxData;
+  client.getTransaction(txId).then((txData) => {
     console.log(`TxId: ${txData.txid}`);
     if (txData.confirmations > 0) {
       console.log('Transaction is confirmed!');
     } else {
-      console.log('New transaction received!');
+      console.log('New transaction found!');
     }
     res.sendStatus(200);
   }).catch((err) => {
@@ -91,6 +89,49 @@ app.post('/send', async (req, res) => {
     if (signedTx.hex) {
       const txId = await client.sendRawTransaction(signedTx.hex);
       res.json({ txId });
+    } else {
+      handleError({ message: 'Something went wrong.' }, res);
+    }
+  } catch (err) {
+    handleError(err, res);
+  }
+});
+
+async function getRawTransaction(fromAddress, amount, toAddress, fee) {
+  try {
+    const unspentTxs = await client.listUnspent(0, 999999999, [fromAddress]);
+    const inputsToSend = await collectInputs(unspentTxs, amount + config.fixedFee);
+    const outputsArray = [];
+    const destination = {};
+    destination[toAddress] = (amount).toFixed(8);
+    outputsArray.push(destination);
+    if (amount + config.fixedFee < Number(inputsToSend.sum)) {
+      const change = {};
+      change[fromAddress] = (Number(inputsToSend.sum) - amount - fee).toFixed(8);
+      outputsArray.push(change);
+    }
+    const rawTx = await client.createRawTransaction(inputsToSend.formatedInputs, outputsArray);
+    return await client.signRawTransactionWithWallet(rawTx);
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
+
+app.post('/sendwithfee', async (req, res) => {
+  const {
+    fromAddress, amount, toAddress, feeSatoshiPerByte,
+  } = req.body;
+  try {
+    let signedTx = await getRawTransaction(fromAddress, amount, toAddress, config.fixedFee);
+    if (signedTx && signedTx.hex) {
+      const estimatedFee = ((signedTx.hex.length / 2) * feeSatoshiPerByte) / 100000000;
+      signedTx = await getRawTransaction(fromAddress, amount, toAddress, estimatedFee);
+      if (signedTx && signedTx.hex) {
+        const txId = await client.sendRawTransaction(signedTx.hex);
+        res.json({ txId });
+      } else {
+        handleError({ message: 'Something went wrong.' }, res);
+      }
     } else {
       handleError({ message: 'Something went wrong.' }, res);
     }
