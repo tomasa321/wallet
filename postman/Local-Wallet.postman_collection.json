@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "4fd7c948-0a05-4224-aba5-85535b604533",
+		"name": "Local-Wallet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "New address",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000",
+					"host": [
+						"localhost"
+					],
+					"port": "3000"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tx notify",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/tx?txid=508b432c1f92750a5afbc8d54ed11d6e763a3db504177a3fee8c03e90cec2406",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"tx"
+					],
+					"query": [
+						{
+							"key": "txid",
+							"value": "508b432c1f92750a5afbc8d54ed11d6e763a3db504177a3fee8c03e90cec2406"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tx send with fixed fee",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fromAddress\": \"2Mv1SpUoPAZ9McpYuneB6N2kqHeKoLWXeJP\",\n    \"amount\": 0.0001,\n    \"toAddress\": \"n3M41Hn2CChRpazwyPYkM2skU14TCQ16a5\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/send",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"send"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tx send with fee satoshi per byte",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fromAddress\": \"2Mv1SpUoPAZ9McpYuneB6N2kqHeKoLWXeJP\",\n    \"amount\": 0.0001,\n    \"toAddress\": \"n3M41Hn2CChRpazwyPYkM2skU14TCQ16a5\",\n    \"feeSatoshiPerByte\": 5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/sendwithfee",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"sendwithfee"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
