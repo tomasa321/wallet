@@ -2,7 +2,7 @@ const config = {
   port: 3000,
   wallet: {
     host: 'localhost',
-    port: 8332,
+    port: 18332,
     user: 'local',
     pass: 'local',
   },
